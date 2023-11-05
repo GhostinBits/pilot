@@ -1,8 +1,0 @@
-Makefile
-CMakeCache.txt
-CMakeFiles
-cmake-build-debug
-cmake_install.cmake
-.DS_Store
-.gitignore
-.idea

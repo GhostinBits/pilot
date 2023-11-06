@@ -16,6 +16,7 @@ class CLITools {
 public:
     static std::string execute(const char *);
     static std::string getWirelessInterfaces();
+    static void updateWireless(const char *, const char*);
 };
 
 #endif //PILOT_NETWORKMANAGER_H

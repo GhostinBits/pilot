@@ -37,7 +37,20 @@
         </div>
 
         <div class="container content">
-          <code>{{{networkInfo}}}</code>
+          <pre><code>{{networkInfo}}</code></pre>
+        </div>
+
+        <div class="container">
+          <h4>Connect to a new wireless network</h4>
+          <form class="form-inline" method="post">
+            <label class="sr-only" for="ssid">SSID</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="ssid" name="ssid" placeholder="SSID">
+
+            <label class="sr-only" for="passphrase">Password</label>
+            <input type="password" class="form-control mb-2 mr-sm-2" id="passphrase" name="passphrase" placeholder="Password">
+
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+          </form>
         </div>
       </div>
     </main>

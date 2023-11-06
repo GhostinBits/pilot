@@ -13,18 +13,14 @@
 </head>
 <body>
 
-<div class="container">  <!-- title -->
-  <h1>pilot</h1><h1 class="blink">_</h1>
-</div>
-<div class="sidebar">  <!-- side menu -->
-  <div class="row">
-    <div class="col">
+  <div class="wrapper row">
+    <nav class="col-md-2">
       <ul class="nav flex-column">
         <li class="nav-item">
           <a class="nav-link" href="/">home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="settings"><b>settings</b></a>
+          <a class="nav-link" href="settings"><b>network settings</b></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">terminal</a>
@@ -33,17 +29,19 @@
           <a class="nav-link" href="#">log out</a>
         </li>
       </ul>
-    </div>
-  </div>
-</div>
+    </nav>
+    <main class="col-md-10">
+      <div>
+        <div class="container">  <!-- title -->
+          <h1>settings</h1><h1 class="blink">_</h1>
+        </div>
 
-<div class="container main">
-  <div class="row">
-    <div class="col-12">
-      <p>Welcome!</p>
-    </div>
+        <div class="container content">
+          <code>{{{networkInfo}}}</code>
+        </div>
+      </div>
+    </main>
   </div>
-</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

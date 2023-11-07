@@ -3,7 +3,7 @@
 //
 #include "CLITools.h"
 
-std::string CLITools::execute(const char * command) {
+std::string CLITools::execute(const char* command) {
     std::array<char, 128> buffer;
     std::string result;
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command, "r"), pclose);
@@ -20,7 +20,7 @@ std::string CLITools::getWirelessInterfaces() {
     return CLITools::execute("cat /proc/net/wireless");
 }
 
-void CLITools::updateWireless(const char * ssid, const char * passphrase) {
+void CLITools::updateWireless(const char* ssid, const char* passphrase) {
     CLITools::execute(strcat(strcat(
-            "sudo raspi-config nonint do_wifi_ssid_passphrase", ssid), passphrase));
+            (char*)"sudo raspi-config nonint do_wifi_ssid_passphrase", ssid), passphrase));
 }

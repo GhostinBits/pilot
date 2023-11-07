@@ -34,34 +34,51 @@ int main() {
     });
 
     CROW_ROUTE(app, "/").methods(crow::HTTPMethod::GET, crow::HTTPMethod::POST)([&](const crow::request& req, crow::response& res){
-        crow::mustache::context pageCtx ({{"uptime", CLITools::execute("uptime")}});
+
         auto& ctx = app.get_context<crow::CookieParser>(req);
         std::string loggedin = ctx.get_cookie("loggedIn");
         if (!(ctx.get_cookie("loggedIn") == "true")) {
             res.redirect("/login");
             res.end();
         }
-        else {
-            auto page = crow::mustache::load("index.html");
-            res.write(page.render_string(pageCtx));
+
+        crow::mustache::context pageCtx ({{"uptime", CLITools::execute("uptime")}});
+        auto page = crow::mustache::load("index.html");
+        res.write(page.render_string(pageCtx));
+        res.end();
+    });
+
+    CROW_ROUTE(app, "/settings").methods(crow::HTTPMethod::GET)([&](const crow::request& req, crow::response& res){
+
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        std::string loggedin = ctx.get_cookie("loggedIn");
+        if (!(ctx.get_cookie("loggedIn") == "true")) {
+            res.redirect("/login");
             res.end();
         }
-    });
 
-    CROW_ROUTE(app, "/settings").methods(crow::HTTPMethod::GET)([](){
+        crow::mustache::context pageCtx ({{"networkInfo", CLITools::getWirelessInterfaces()}});
         auto page = crow::mustache::load("settings.html");
-        crow::mustache::context ctx ({{"networkInfo", CLITools::getWirelessInterfaces()}});
-        return page.render(ctx);
+        res.write(page.render_string(pageCtx));
+        res.end();
     });
 
-    CROW_ROUTE(app, "/settings").methods(crow::HTTPMethod::POST)([](const crow::request& req){
+    CROW_ROUTE(app, "/settings").methods(crow::HTTPMethod::POST)([&](const crow::request& req, crow::response& res){
+
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        std::string loggedin = ctx.get_cookie("loggedIn");
+        if (!(ctx.get_cookie("loggedIn") == "true")) {
+            res.redirect("/login");
+            res.end();
+        }
 
         // building a url, the ip can be arbitrary
         crow::query_string qs = crow::query_string("http://0.0.0.0/?" + req.body);
         CLITools::updateWireless(qs.get("ssid"), qs.get("passphrase"));
+        crow::mustache::context pageCtx ({{"networkInfo", CLITools::getWirelessInterfaces()}});
         auto page = crow::mustache::load("settings.html");
-        crow::mustache::context ctx ({{"networkInfo", CLITools::getWirelessInterfaces()}});
-        return page.render(ctx);
+        res.write(page.render_string(pageCtx));
+        res.end();
     });
 
     CROW_ROUTE(app, "/uptime")([](){

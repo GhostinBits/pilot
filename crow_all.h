@@ -3244,6 +3244,8 @@ namespace crow
 
 #pragma once
 #include <boost/algorithm/string/trim.hpp>
+#include <iomanip>
+#include <memory>
 
 
 

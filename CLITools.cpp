@@ -21,6 +21,6 @@ std::string CLITools::getWirelessInterfaces() {
 }
 
 void CLITools::updateWireless(const char* ssid, const char* passphrase) {
-    CLITools::execute(strcat(strcat(
-            (char*)"sudo raspi-config nonint do_wifi_ssid_passphrase", ssid), passphrase));
+    char commandHeader[100] = "sudo raspi-config nonint do_wifi_ssid_passphrase";
+    CLITools::execute(strcat(strcat(commandHeader, ssid), passphrase));
 }

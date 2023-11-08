@@ -8,8 +8,6 @@ include_directories(/usr/local/Cellar/boost/1.83.0/include)
 
 add_executable(pilot main.cpp
         CLITools.h
-        CLITools.cpp
-        NetworkInterface.cpp
-        NetworkInterface.h)
+        CLITools.cpp)
 
 target_link_libraries(pilot pthread)

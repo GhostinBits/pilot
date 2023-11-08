@@ -24,3 +24,56 @@ void CLITools::updateWireless(const char* ssid, const char* passphrase) {
     char commandHeader[100] = "sudo raspi-config nonint do_wifi_ssid_passphrase";
     CLITools::execute(strcat(strcat(commandHeader, ssid), passphrase));
 }
+
+std::vector<std::string> CLITools::split(std::string s, std::string delimiter) {
+    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+    std::string token;
+    std::vector<std::string> res;
+
+    while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) {
+        token = s.substr(pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        res.push_back(token);
+    }
+
+    res.push_back(s.substr (pos_start));
+    return res;
+}
+
+int CLITools::authenticate(const char* username, const char* passwd) {
+
+    // debugging only
+    if (strcmp(username, "debug") == 0 && strcmp(passwd, "debug") == 0) {
+        return 1;
+    }
+
+    char hashCmdHeader[100] = "cat /etc/shadow | grep ";
+    char pwdChkCmd[200] = "python -c 'import crypt, os; print(crypt.crypt(";
+    std::string pattern;
+    std::string salt;
+    std::string passwordHash;
+    std::string calculatedHash;
+    std::vector<std::string> subs;
+    static const boost::regex e(".*&");
+    boost::match_results<std::string::const_iterator> results;
+    pattern = CLITools::execute(strcat(hashCmdHeader, username));
+
+    if (boost::regex_match(pattern, results, e)) {
+        salt = results[0];
+    }
+    else {
+        return 0;
+    }
+
+    subs = split(pattern, "&");
+    passwordHash = subs.back();
+
+    //python -c 'import crypt, os; print(crypt.crypt(     a, b))'
+
+    calculatedHash = CLITools::execute(strcat(strcat(strcat(strcat(pwdChkCmd, passwd), ", "), salt.c_str()), "))'"));
+    if (passwordHash.find(calculatedHash) != std::string::npos) {
+        return 1;
+    }
+    else return 0;
+
+}

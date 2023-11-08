@@ -12,12 +12,16 @@
 #include <string>
 #include <array>
 #include <cstring>
+#include <vector>
+#include <boost/regex.hpp>
 
 class CLITools {
 public:
     static std::string execute(const char*);
     static std::string getWirelessInterfaces();
     static void updateWireless(const char*, const char*);
+    static int authenticate(const char*, const char*);
+    static std::vector<std::string> split(std::string, std::string);
 };
 
 #endif //PILOT_NETWORKMANAGER_H

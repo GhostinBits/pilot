@@ -13,9 +13,15 @@ int main() {
         crow::query_string qs = crow::query_string("http://0.0.0.0/?" + req.body);
 
 
-        if (1) {  // need to check credentials here
+        if (CLITools::authenticate(qs.get("username"), qs.get("password"))) {
             ctx.set_cookie("loggedIn", "true").path("/").max_age(1800).httponly();
             res.redirect("/");
+            res.end();
+        }
+        else {
+            crow::mustache::context pageCtx ({{"error", "Wrong credentials. Please try again."}});
+            auto page = crow::mustache::load("login.html");
+            res.write(page.render_string(pageCtx));
             res.end();
         }
     });
@@ -23,8 +29,9 @@ int main() {
     CROW_ROUTE(app, "/login").methods(crow::HTTPMethod::GET)([&](const crow::request& req, crow::response& res){
         auto& ctx = app.get_context<crow::CookieParser>(req);
         if (!(ctx.get_cookie("loggedIn") == "true")) {
+            crow::mustache::context pageCtx ({{"error", ""}});
             auto page = crow::mustache::load("login.html");
-            res.write(page.render_string());
+            res.write(page.render_string(pageCtx));
             res.end();
         }
         else {

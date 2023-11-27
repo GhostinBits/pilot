@@ -2,6 +2,7 @@
 // Created by jiangqi on 2023-11-05.
 //
 #include "CLITools.h"
+namespace bp = boost::process;
 
 std::string CLITools::execute(const char* command) {
     std::array<char, 128> buffer;
@@ -14,6 +15,29 @@ std::string CLITools::execute(const char* command) {
         result += buffer.data();
     }
     return result;
+}
+
+std::string CLITools::execute_timeout(const char* command, int n) {
+    std::array<char, 128> buffer;
+    std::string result;
+    pid_t pid;
+    const clock_t begin_time = clock();
+    char command_buffer[1000];
+
+    strcpy(command_buffer, command);
+    strcat(command_buffer, " &> output.txt &");
+
+    pid = fork();
+    if(pid == 0) { // child process
+        setpgid(getpid(), getpid());
+        system(command_buffer);
+    }
+    else {   // parent process
+        sleep(n);
+        kill(-pid, SIGKILL);
+        std::getline(std::ifstream("output.txt"), result, '\0');
+        return result;
+    }
 }
 
 std::string CLITools::getWirelessInterfaces() {

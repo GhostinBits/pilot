@@ -101,6 +101,27 @@ int main() {
         res.end();
     });
 
+    CROW_ROUTE(app, "/run").methods(crow::HTTPMethod::POST)([&](const crow::request& req, crow::response& res){
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        crow::query_string qs = crow::query_string("http://0.0.0.0/?" + req.body);
+        res.write(CLITools::execute_timeout(qs.get("command"), 3));
+        res.end();
+    });
+
+    CROW_ROUTE(app, "/terminal").methods(crow::HTTPMethod::GET, crow::HTTPMethod::POST)([&](const crow::request& req, crow::response& res){
+
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        std::string loggedin = ctx.get_cookie("loggedIn");
+        if (!(ctx.get_cookie("loggedIn") == "true")) {
+            res.redirect("/login");
+            res.end();
+        }
+
+        auto page = crow::mustache::load("terminal.html");
+        res.write(page.render_string());
+        res.end();
+    });
+
     app.port(18080).run();
 
     return 0;

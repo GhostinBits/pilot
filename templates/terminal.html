@@ -37,7 +37,9 @@
         <h1>pilot</h1><h1 class="blink">_</h1>
       </div>
 
-      <code class="term"></code>
+      <div class="container content">
+        <code class="term"></code>
+      </div>
     </div>
   </main>
 </div>
@@ -51,10 +53,13 @@
 
 <script type="text/javascript">
   $(function() {
+    var greeting = function () {
+      return $.post('run', {command: "echo \"$PWD\""});
+    };
     $('.term').terminal(function(command, term) {
       return $.post('run', {command: command});
     }, {
-      greetings: 'Simple example'
+      greetings: greeting
     });
   });
 </script>

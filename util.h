@@ -19,14 +19,12 @@
 #include <boost/regex.hpp>
 #include <fstream>
 
-class CLITools {
+class util {
 public:
     static std::string execute(const char*);
     static std::string execute_timeout(const char* command, int n);
     static std::string getWirelessInterfaces();
     static void updateWireless(const char*, const char*);
-    static int authenticate(const char*, const char*);
-    static std::vector<std::string> split(std::string, std::string);
 };
 
 #endif //PILOT_NETWORKMANAGER_H
